@@ -1,0 +1,90 @@
+/* Reset de margens e padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Importação da fonte do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Estilos globais */
+body, html {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Centralização do conteúdo */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* Estilização do cabeçalho */
+.cabecalho {
+    width: 100%;
+    background-color: #3e89d6;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 25px;
+}
+
+/* Estilização dos links */
+a {
+    text-decoration: none;
+    color: #3e89d6;
+    padding: 8px 16px;
+    transition: background-color 0.3s ease;
+}
+
+a:hover {
+    background-color: #3e89d6;
+    color: white;
+}
+
+/* Estilização das listas */
+ul {
+    list-style-type: none;
+}
+
+li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.usuario {
+    font-weight: bold;
+}
+
+/* Estilização dos formulários */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Estilização dos botões de envio */
+input[type="submit"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    background-color: #3e89d6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #3273b1;
+}
