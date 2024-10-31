@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínicas Disponíveis</title>
+    <link rel="stylesheet" href="Telaclinica.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Clínicas Disponíveis</h1>
+        <div class="clinic-list">
+            <div class="clinic-item" onclick="showClinicDetails('clinic1')">
+                <h2>Clínica A</h2>
+                <p>Média de Avaliação: 4.5</p>
+            </div>
+            <div class="clinic-item" onclick="showClinicDetails('clinic2')">
+                <h2>Clínica B</h2>
+                <p>Média de Avaliação: 4.0</p>
+            </div>
+            <!-- Adicione mais clínicas conforme necessário -->
+        </div>
+
+        <div class="clinic-details" id="clinic-details" style="display: none;">
+            <h2>Detalhes da Clínica</h2>
+            <div id="details-content"></div>
+            <button onclick="hideClinicDetails()">Fechar</button>
+        </div>
+    </div>
+
+    <script src="Telaclinica.js"></script>
+</body>
+</html>
