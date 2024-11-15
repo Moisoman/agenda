@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset de estilos */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos do corpo */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #e0f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Contêiner principal (caixa central) */
+.container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    border: 2px solid #007bb5;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    text-align: center;
+}
+
+/* Opções de agendamento */
+.opcoes {
+    margin-bottom: 20px;
+}
+
+/* Estilo do perfil */
+.perfil {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.perfil img {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+}
+
+/* Título */
+h1 {
+    color: #007bb5;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+/* Estilo dos botões */
+.botoes button {
+    margin: 5px;
+    padding: 6px 8px; /* Botões um pouco menores */
+    background-color: #007bb5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer; /* Adiciona o cursor pointer */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 12px; /* Diminui um pouco o tamanho da fonte */
+}
+
+.botoes button:hover {
+    background-color: #005f86;
+    transform: translateY(-2px); /* efeito */
+}
+
+/* Estilo do calendário */
+.calendario {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 colunas de tamanhos iguais */
+    gap: 5px;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #007bb5;
+    border-radius: 10px;
+    background-color: #f0fcfc;
+}
+
+/* Estilo de cada dia */
+.dia {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #b2ebf2;
+    border-radius: 5px;
+    background-color: #ffffff;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px; /* Define uma largura fixa */
+    cursor: pointer; /* Adiciona o cursor pointer para os dias */
+}
+
+/* Ajuste para os dias da semana */
+.dia.dia-semana {
+    font-weight: bold;
+    background-color: #b2ebf2;
+}
+
+/* Estilo para o dia selecionado */
+.dia-selecionado {
+    background-color: #007bb5;
+    color: white;
+    font-weight: bold;
+}
+
+/* Estilo para os nomes dos dias da semana */
+.cabecalho-calendario {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    font-weight: bold;
+    background-color: #b2ebf2; 
+    border-radius: 5px;
+}
