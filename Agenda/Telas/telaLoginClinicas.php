@@ -133,6 +133,7 @@ $conn->close();
         </div>
     </form>
     <p>Não tem uma conta? <a href="telaCadastroClinica.php">Criar uma conta</a></p>
+    <p>Voltar para o inicio <a href="../Auth/index.php">Home</a></p>
 </div>
 
 </body>

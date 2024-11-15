@@ -191,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </form>
 
-    <p>Já tem uma conta? <a href="telaLoginClinica.php">Faça login</a></p>
+    <p>Já tem uma conta? <a href="telaLoginClinicas.php">Faça login</a></p>
 </div>
 
 </body>
