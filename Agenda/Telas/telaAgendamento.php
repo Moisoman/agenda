@@ -40,12 +40,11 @@ $stmt->close();
 // Handle form submission for scheduling
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar_agendamento'])) {
     $clinicaId = $_POST['clinica'];
-    $procedimento = $_POST['procedimento'];
     $dataHora = date('Y-m-d H:i:s');
 
     // Insert the appointment into the database
-    $stmt = $conn->prepare("INSERT INTO agendamentos (usuario_id, clinica_id,dt_agendamento) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("iiss", $userId, $clinicaId, $procedimento, $dataHora);
+    $stmt = $conn->prepare("INSERT INTO agendamentos (usuario_id, clinica_id, data_hora) VALUES (?, ?, ?)");
+    $stmt->bind_param("iis", $userId, $clinicaId, $dataHora);
 
     if ($stmt->execute()) {
         echo "<script>alert('Agendamento realizado com sucesso!');</script>";
@@ -57,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar_agendamento
 }
 $conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -84,9 +82,9 @@ $conn->close();
             <label for="clinica">Selecione a clínica:</label>
             <select id="clinica" name="clinica" required>
                 <option value="">Selecione uma clínica</option>
-                <?php foreach ($clinicas as $clinica): ?>
-                    <option value="<?php echo $clinica['id']; ?>">
-                        <?php echo htmlspecialchars($clinica['nome']); ?>
+                <?php foreach ($clinica as $cl): ?>
+                    <option value="<?php echo $cl['id_clinica']; ?>">
+                        <?php echo htmlspecialchars($cl['nm_clinica']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
@@ -96,8 +94,6 @@ $conn->close();
             <input type="text" id="datepicker" name="data" readonly required>
             
             <div class="botoes">
-                
-                
                 <a href="telaPerfil.php">
                 <button type="button">Perfil</button>
                 </a>
@@ -141,4 +137,3 @@ $conn->close();
 
 </body>
 </html>
-

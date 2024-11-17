@@ -1,9 +1,13 @@
 <?php
 session_start(); // Start the session
 
-// Include the database connection (update with your actual connection file)
+    // Include the database connection (update with your actual connection file)
 include('conexao.php'); 
 
+// If a clinic is logged in, log them out
+if (isset($_SESSION['clinicaLogada'])) {
+    unset($_SESSION['clinicaLogada']); // Log out the clinic
+}
 // Handle login submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];

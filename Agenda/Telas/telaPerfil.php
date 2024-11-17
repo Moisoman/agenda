@@ -126,7 +126,7 @@ $usuarioLogado = $_SESSION['usuarioLogado'];
             </div>
             <div>
                 <strong>Imagem de Perfil:</strong>
-                <img src="../img/<?= htmlspecialchars($usuarioLogado['imagem']) ?>" alt="Imagem de Perfil" width="100">
+                <img src="../img/<?= htmlspecialchars($usuarioLogado['imagem']) ?>" alt="" width="100">
             </div>
         </div>
     </div>

@@ -4,7 +4,13 @@ session_start(); // Start the session
 // Check if the user is logged in
 $isLoggedIn = isset($_SESSION['usuarioLogado']);
 $usuarioLogado = $isLoggedIn ? $_SESSION['usuarioLogado'] : null;
+
+$isClinicaLoggedIn = isset($_SESSION['clinicaLogada']);
+$clinicaLogada = $isClinicaLoggedIn ? $_SESSION['clinicaLogada'] : null;
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -14,203 +20,204 @@ $usuarioLogado = $isLoggedIn ? $_SESSION['usuarioLogado'] : null;
     <title>Serviços Odontológicos Online</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #fff;
-        }
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
 
-        /* Cabeçalho */
-        .header {
-            background-color: #007bff;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            color: white;
-        }
+/* Cabeçalho */
+.header {
+    background-color: #007bff;
+    padding: 10px 20px; /* Adjust padding for better spacing */
+    display: flex;
+    justify-content: space-between; /* Space out the logo and navigation */
+    align-items: center; /* Align items vertically */
+    color: white;
+}
 
-        .header .logo {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            gap: 20px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
+.header .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between logo and text */
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
 
-        .header img {
-            height: 30px;
-            margin-left: 10px;
-        }
+.header img {
+    height: 30px;
+    margin-left: 10px;
+}
 
-        .header nav {
-            display: flex;
-            gap: 20px;
-        }
+.header nav {
+    display: flex;
+    gap: 20px;
+    align-items: center; /* Align nav links vertically */
+}
 
-        .header nav a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 15px;
-        }
+.header nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px; /* Add padding for better clickable area */
+}
 
-        .header .profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding-right: 10px;
-        }
+.header .profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding-right: 10px;
+}
 
-        .header .profile img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
+.header .profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
 
-        #user-name {
-            font-size: 16px; /* Nome do usuário um pouco menor */
-            font-weight: bold;
-        }
+#user-name {
+    font-size: 16px; /* Nome do usuário um pouco menor */
+    font-weight: bold;
+}
 
-        #dropdown-arrow {
-            font-size: 14px; /* Tamanho da seta menor */
-            color: white;
-            transition: transform 0.3s ease; /* Transição suave para a seta */
-        }
+#dropdown-arrow {
+    font-size: 14px; /* Tamanho da seta menor */
+    color: white;
+    transition: transform 0.3s ease; /* Transição suave para a seta */
+}
 
-        .dropdown-menu {
-            display: block;
-            position: absolute;
-            top: 60px;
-            right: 5px;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            max-height: 0;
-            opacity: 0;
-            transition: max-height 0.5s ease, opacity 0.5s ease; /* Animação suave para altura e opacidade */
-        }
+.dropdown-menu {
+    display: block;
+    position: absolute;
+    top: 60px;
+    right: 5px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease; /* Animação suave para altura e opacidade */
+}
 
-        .dropdown-menu.show {
-            max-height: 200px; /* Altura máxima ao expandir o menu */
-            opacity: 1;
-        }
+.dropdown-menu.show {
+    max-height: 200px; /* Altura máxima ao expandir o menu */
+    opacity: 1;
+}
 
-        .dropdown-menu a {
-            display: block;
-            padding: 10px;
-            color: #333;
-            text-decoration: none;
-            border-bottom: 1px solid #ccc;
-        }
+.dropdown-menu a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #ccc;
+}
 
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
-        }
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
 
-        /* Conteúdo principal */
-        .main-content {
-            text-align: center;
-            margin-top: 50px;
-        }
+/* Conteúdo principal */
+.main-content {
+    text-align: center;
+    margin-top: 50px;
+}
 
-        .main-content img {
-            max-width: 100%;
-            height: auto;
-        }
+.main-content img {
+    max-width: 100%;
+    height: auto;
+}
 
-        .title {
-            font-size: 32px;
-            margin: 20px 0;
-            font-style: inherit;
-        }
+.title {
+    font-size: 32px;
+    margin: 20px 0;
+    font-style: inherit;
+}
 
-        .description {
-            font-size: 18px;
-            margin: 10px 0 40px 0;
-        }
+.description {
+    font-size: 18px;
+    margin: 10px 0 40px 0;
+}
 
-        /* Rodapé com botões no canto inferior direito */
-        .footer {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
+/* Rodapé com botões no canto inferior direito */
+.footer {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
 
-        .buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
 
-        .footer a, .footer button {
-            padding: 0;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            overflow: hidden;
-        }
+.footer a, .footer button {
+    padding: 0;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    overflow: hidden;
+}
 
-        .footer a img, .footer button img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            background-color: #fff;
-            border-radius: 50%;
-        }
+.footer a img, .footer button img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-color: #fff;
+    border-radius: 50%;
+}
 
-        .footer button:hover, .footer a:hover {
-            transform: scale(1.1);
-        }
+.footer button:hover, .footer a:hover {
+    transform: scale(1.1);
+}
 
-        .toggle-arrow {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: none;
-            font-size: 18px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s ease;
-        }
+.toggle-arrow {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    font-size: 18px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
 
-        .toggle-arrow:hover {
-            background-color: #0056b3;
-            transform: scale(1.1);
-        }
+.toggle-arrow:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
 
-        .buttons.hidden {
-            opacity: 0;
-            transform: translateY(20px);
-            visibility: hidden;
-        }
+.buttons.hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    visibility: hidden;
+}
 
-        .buttons.visible {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-        }
+.buttons.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
     </style>
 </head>
 
@@ -223,21 +230,26 @@ $usuarioLogado = $isLoggedIn ? $_SESSION['usuarioLogado'] : null;
             Univel TADS
         </div>
         <nav>
+            <a href="#"></a>
+            <a href="#"></a>
+            <a href="#"></a>
             <a href="#">Contato</a>
-            <a href="#">Sobre nós</a>
-            <a href="#">Cliente</a>
-            <a href="#">Serviços</a>
-            
+
+            <!-- If clinic is logged in, show "Clinica" button, otherwise show login link -->
+            <?php if ($isClinicaLoggedIn): ?>
+                <a href="../Telas/clinicaDashboard.php">Clinica</a> <!-- Redirect to clinic dashboard -->
+            <?php else: ?>
+                <a href="../Telas/telaLoginClinicas.php">Login Clinicas</a> <!-- Redirect to clinic login page -->
+            <?php endif; ?>
+
             <!-- Display Login or Meu Perfil based on login status -->
             <?php if (!$isLoggedIn): ?>
                 <a href="../Telas/telaLogin.php" id="login-link">Login</a>
-                <a href="../Telas/telaLoginClinicas.php" id="login-clinicas-link">Login Clinicas</a>
             <?php else: ?>
-                <!-- Show user profile if logged in -->
-                <div class="profile" id="user-profile" style="display:flex;">
-                    <!--<img src="../img/<?= $usuarioLogado['imagem'] ?>" alt="User Profile" id="profile-image"> -->
-                    <span id="user-name"><?= $usuarioLogado['nome'] ?></span>
-                    <span id="dropdown-arrow"></span>
+                
+                <div class="profile" id="user-profile" style="display:flex; align-items: center;">
+                    <!--<img src="../img/<?= $usuarioLogado['imagem'] ?>" alt="User Profile" id="profile-image" style="width: 40px; height: 40px; border-radius: 50%;">-->
+                    <span id="user-name" style="font-weight: bold;"><?= $usuarioLogado['nome'] ?></span>
                 </div>
                 <a href="../Telas/telaPerfil.php" id="perfil-link">Meu Perfil</a>
             <?php endif; ?>

@@ -44,7 +44,7 @@
            
             <div class="form-group">
                 <label for="telefone">Telefone:</label>
-                <input type="tel" id="telefone" name="telefone" required>
+                <input type="tel" id="telefone" name="telefone" required maxlength=14>
             </div>
 
             

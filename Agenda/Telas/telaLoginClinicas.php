@@ -1,10 +1,13 @@
 <?php
 session_start();
-$host = 'localhost:3306'; // Your database host
-$db = 'agenda'; // Your database name
-$user = 'root'; // Your database username
-$pass = ''; // Your database password
+$host = 'localhost:3306'; 
+$db = 'agenda'; 
+$user = 'root'; 
+$pass = ''; 
 
+if (isset($_SESSION['usuarioLogado'])) {
+    unset($_SESSION['usuarioLogado']); // Log out the user
+}
 // Database connection
 $conn = new mysqli($host, $user, $pass, $db);
 
@@ -19,8 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = $_POST['senha'];
 
     // Validate login credentials for clinics
-    $stmt = $conn->prepare("SELECT id, nome, cnpj, senha FROM clinicas WHERE cnpj = ?");
-    $stmt->bind_param("s", $cnpj); // Using CNPJ instead of email
+    $stmt = $conn->prepare("SELECT id_clinica, nm_clinica, cnpj, senha FROM clinica WHERE cnpj = ?");
+    $stmt->bind_param("s", $cnpj); 
     $stmt->execute();
     $stmt->store_result();
     
@@ -30,21 +33,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->fetch();
 
         // Verify the password
-        if (password_verify($senha, $storedHashedPassword)) {
-            // Password is correct, store session and redirect
+        if (password_verify(trim($senha), trim($storedHashedPassword))) {
+            // Password is correct
             $_SESSION['clinicaLogada'] = [
-                'id' => $clinicId,
-                'nome' => $clinicName,
+                'id_clinica' => $clinicId,
+                'nm_clinica' => $clinicName,
                 'cnpj' => $clinicCNPJ,
             ];
-            
-            // Redirect to the clinic dashboard
-            header('Location: clinicaDashboard.php');
+            header('Location: ../Auth/index.php');
             exit;
         } else {
             // Invalid password
             $errorMessage = "Senha inválida!";
         }
+        
     } else {
         // Invalid CNPJ
         $errorMessage = "CNPJ não encontrado!";
@@ -122,7 +124,7 @@ $conn->close();
     <form action="" method="POST">
         <div class="form-group">
             <label for="cnpj">CNPJ</label>
-            <input type="text" id="cnpj" name="cnpj" required />
+            <input type="text" id="cnpj" name="cnpj" required maxlength=14/>
         </div>
         <div class="form-group">
             <label for="senha">Senha</label>

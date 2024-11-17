@@ -16,11 +16,11 @@ if ($conn->connect_error) {
 // Handle registration form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = $_POST['nome'];
-    $cnpj = $_POST['cnpj']; // CNPJ instead of email
+    $cnpj = $_POST['cnpj']; 
     $senha = $_POST['senha'];
 
     // Check if the CNPJ already exists in the database
-    $stmt = $conn->prepare("SELECT id FROM clinicas WHERE cnpj = ?");
+    $stmt = $conn->prepare("SELECT id_clinica FROM clinica WHERE cnpj = ?");
     $stmt->bind_param("s", $cnpj);
     $stmt->execute();
     $stmt->store_result();
@@ -33,8 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hashedPassword = password_hash($senha, PASSWORD_DEFAULT);
 
         // Register new clinic with hashed password
-        $stmt = $conn->prepare("INSERT INTO clinicas (nome, cnpj, senha) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $nome, $cnpj, $hashedPassword); // Use hashed password here
+        $stmt = $conn->prepare("INSERT INTO clinica (nm_clinica, cnpj, senha) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $nome, $cnpj, $hashedPassword); 
         if ($stmt->execute()) {
             $successMessage = "Clínica registrada com sucesso! Você pode fazer login agora.";
         } else {
@@ -180,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <div class="form-group">
             <label for="cnpj">CNPJ</label>
-            <input type="text" id="cnpj" name="cnpj" required />
+            <input type="text" id="cnpj" name="cnpj" required maxlength="14" />
         </div>
         <div class="form-group">
             <label for="senha">Senha</label>
@@ -193,6 +193,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <p>Já tem uma conta? <a href="telaLoginClinicas.php">Faça login</a></p>
 </div>
+<script>
+    // CNPJ mascara
+   /* document.getElementById('cnpj').addEventListener('input', function (event) {
+    let cnpj = event.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+
+    // Apply the format based on the number of digits entered
+    if (cnpj.length <= 2) {
+        cnpj = cnpj.replace(/(\d{2})(\d{0,1})/, '$1.$2');
+    } else if (cnpj.length <= 5) {
+        cnpj = cnpj.replace(/(\d{2})(\d{3})(\d{0,1})/, '$1.$2.$3');
+    } else if (cnpj.length <= 8) {
+        cnpj = cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{0,1})/, '$1.$2.$3/$4');
+    } else if (cnpj.length <= 12) {
+        cnpj = cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,1})/, '$1.$2.$3/$4-$5');
+    } else {
+        cnpj = cnpj.slice(0, 18); // Limit to 18 characters (XX.XXX.XXX/XXXX-XX)
+    }
+
+    event.target.value = cnpj;
+});*/
+
+</script>
 
 </body>
 </html>
