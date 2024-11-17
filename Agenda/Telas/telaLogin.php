@@ -9,7 +9,7 @@
 <body>
 
     <div class="container">
-        <h2>Login de Cliente</h2>
+        <h2>Login de Paciente</h2>
 
         <form action="../Auth/loginUsuario.php" method="POST">
             <div class="form-group">

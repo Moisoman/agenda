@@ -145,7 +145,7 @@ $conn->close();
 
     <!-- Header -->
     <div class="header">
-        <h1>Dashboard - Clínica: <?= htmlspecialchars($clinicaName) ?></h1>
+        <h1>Clínica: <?= htmlspecialchars($clinicaName) ?></h1>
         <a href="../Auth/index.php">
             <button class="home-btn">Home</button>
         </a>

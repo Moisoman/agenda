@@ -232,19 +232,19 @@ $clinicaLogada = $isClinicaLoggedIn ? $_SESSION['clinicaLogada'] : null;
         <nav>
             <a href="#"></a>
             <a href="#"></a>
+            <a href="../Telas/telaInfo.php">Quem somos</a>
             <a href="#"></a>
-            <a href="#">Contato</a>
 
             <!-- If clinic is logged in, show "Clinica" button, otherwise show login link -->
             <?php if ($isClinicaLoggedIn): ?>
-                <a href="../Telas/clinicaDashboard.php">Clinica</a> <!-- Redirect to clinic dashboard -->
+                <a href="../Telas/clinicaDashboard.php"> Página da Clinica</a> <!-- Redirect to clinic dashboard -->
             <?php else: ?>
                 <a href="../Telas/telaLoginClinicas.php">Login Clinicas</a> <!-- Redirect to clinic login page -->
             <?php endif; ?>
 
             <!-- Display Login or Meu Perfil based on login status -->
             <?php if (!$isLoggedIn): ?>
-                <a href="../Telas/telaLogin.php" id="login-link">Login</a>
+                <a href="../Telas/telaLogin.php" id="login-link">Login Paciente</a>
             <?php else: ?>
                 
                 <div class="profile" id="user-profile" style="display:flex; align-items: center;">
