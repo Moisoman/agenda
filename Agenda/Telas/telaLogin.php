@@ -27,7 +27,7 @@
             </div>
 
             <div class="form-group">
-                <p>Ainda não tem uma conta? <a href="/agenda/Agenda/Auth/Cadastro.php">Cadastre-se</a></p>
+                <p>Ainda não tem uma conta? <a href="../Auth/Cadastro.php">Cadastre-se</a></p>
             </div>
         </form>
     </div>
