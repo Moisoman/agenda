@@ -26,6 +26,23 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Handle deleting agendamento
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_agendamento'])) {
+    $agendamentoId = $_POST['agendamento_id']; // Get the agendamento ID
+
+    // SQL query to delete the appointment
+    $stmt = $conn->prepare("DELETE FROM agendamentos WHERE id = ?");
+    $stmt->bind_param("i", $agendamentoId);
+
+    if ($stmt->execute()) {
+        echo "<script>alert('Agendamento deletado com sucesso!'); window.location.href = 'clinicaDashboard.php';</script>";
+    } else {
+        echo "<script>alert('Erro ao deletar o agendamento: " . $stmt->error . "');</script>";
+    }
+
+    $stmt->close();
+}
+
 // Fetch all agendamentos from the database (no filter by clinic)
 $sql = "SELECT ag.id, ag.data_hora, u.nome AS paciente_nome, c.nm_clinica AS clinica_nome
         FROM agendamentos ag
@@ -42,7 +59,7 @@ if ($result === false) {
 
 // Close the connection (no need to close the statement explicitly when using query method)
 $conn->close();
-?>
+?>>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -143,8 +160,11 @@ $conn->close();
                             <td><?= date('d/m/Y H:i', strtotime($row['data_hora'])) ?></td>
                             <td><?= htmlspecialchars($row['clinica_nome']) ?></td>
                             <td>
-                                <button class="btn">Ver Detalhes</button>
-                                <button class="btn">Alterar Status</button>
+                                <!-- Form for "Alterar Status" - Delete -->
+                                <form method="POST" action="">
+                                    <input type="hidden" name="agendamento_id" value="<?= $row['id'] ?>">
+                                    <button type="submit" class="btn" name="delete_agendamento">Rejeitar</button>
+                                </form>
                             </td>
                         </tr>
                     <?php endwhile; ?>

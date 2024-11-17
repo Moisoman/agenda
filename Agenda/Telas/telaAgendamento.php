@@ -16,7 +16,7 @@ $nomeUsuario = $usuarioLogado['nome']; // Get user name
 // Database connection and further processing...
 $host = 'localhost:3306'; // Your database host
 $db = 'agenda'; // Database name
-$user = 'root'; // Database username
+$user = 'root'; // Your database username
 $pass = ''; // Database password
 
 $conn = new mysqli($host, $user, $pass, $db);
@@ -37,10 +37,20 @@ while ($stmt->fetch()) {
 }
 $stmt->close();
 
+// Fetch the user's agendamentos
+$stmt = $conn->prepare("SELECT ag.id, ag.data_hora, c.nm_clinica, u.nome AS paciente_nome 
+                        FROM agendamentos ag 
+                        JOIN clinica c ON ag.clinica_id = c.id_clinica 
+                        JOIN usuarios u ON ag.usuario_id = u.id 
+                        WHERE ag.usuario_id = ? ORDER BY ag.data_hora DESC");
+$stmt->bind_param("i", $userId); // Bind user ID to the query
+$stmt->execute();
+$result = $stmt->get_result(); // Get the result of the query
+
 // Handle form submission for scheduling
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar_agendamento'])) {
     $clinicaId = $_POST['clinica'];
-    $dataHora = date('Y-m-d H:i:s');
+    $dataHora = $_POST['data']; // Get the selected date from the form
 
     // Insert the appointment into the database
     $stmt = $conn->prepare("INSERT INTO agendamentos (usuario_id, clinica_id, data_hora) VALUES (?, ?, ?)");
@@ -67,6 +77,132 @@ $conn->close();
     
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        /* Base Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .opcoes {
+            margin-bottom: 30px;
+        }
+
+        .perfil {
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Form Styling */
+        form {
+            margin-bottom: 30px;
+        }
+
+        select, input[type="text"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="button"], button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button[type="button"]:hover, button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Styling for 'Seus Agendamentos' Section */
+        .agendamentos {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .agendamentos table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .agendamentos th, .agendamentos td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .agendamentos th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .agendamentos tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .agendamentos tbody tr {
+            transition: background-color 0.3s ease;
+        }
+
+        .card {
+            padding: 20px;
+            margin: 15px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .card .info {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card .info span {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .card .info .date {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .card .info .clinica {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -90,7 +226,7 @@ $conn->close();
             </select>
 
             <!-- Date Picker -->
-            <label for="data">Selecione a data:</label>
+            <label for="data">Selecione a data e hora:</label>
             <input type="text" id="datepicker" name="data" readonly required>
             
             <div class="botoes">
@@ -100,6 +236,35 @@ $conn->close();
                 <button type="submit" name="confirmar_agendamento">CONFIRMAR</button>
             </div>
         </form>
+
+        <!-- Display User's Agendamentos -->
+        <div class="agendamentos">
+            <h2>Seus Agendamentos</h2>
+            <?php if ($result->num_rows > 0): ?>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data e Hora</th>
+                            <th>Clínica</th>
+                            <th>Paciente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($row['id']); ?></td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($row['data_hora'])); ?></td>
+                                <td><?php echo htmlspecialchars($row['nm_clinica']); ?></td>
+                                <td><?php echo htmlspecialchars($row['paciente_nome']); ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>Você não tem nenhum agendamento.</p>
+            <?php endif; ?>
+        </div>
     </div>
 
     <!-- This will be the calendar that will show when Agendar button is clicked -->
@@ -117,23 +282,13 @@ $conn->close();
     // Initialize Flatpickr
     flatpickr("#datepicker", {
         minDate: "today", // User can't select a date before today
-        dateFormat: "Y-m-d", // Format the date as yyyy-mm-dd
-        enableTime: false, // Disable time selection, allow only date
+        dateFormat: "Y-m-d H:i", // Format the date as yyyy-mm-dd HH:mm
+        enableTime: true, // Enable time selection along with date
         nextArrow: '→', // Arrow to go to the next month
         prevArrow: '←', // Arrow to go to the previous month
-    });
-
-    // Toggle calendar visibility when clicking the Agendar button
-    document.getElementById('btnAgendar').addEventListener('click', function() {
-        const calendario = document.getElementById('calendario');
-        // Toggle visibility of the calendar
-        if (calendario.style.display === 'none' || calendario.style.display === '') {
-            calendario.style.display = 'block';
-        } else {
-            calendario.style.display = 'none';
-        }
     });
 </script>
 
 </body>
 </html>
+
