@@ -65,13 +65,14 @@ CREATE TABLE IF NOT EXISTS `CLINICA` (
 -- Table `AGENDAMENTO`
 -- -----------------------------------------------------
 CREATE TABLE agendamentos (
-    id INT AUTO_INCREMENT PRIMARY KEY auto_increment,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     clinica_id INT NOT NULL,
     data_hora DATETIME NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ativo TINYINT(1) DEFAULT 0,  -- 0 means not confirmed, 1 means confirmed
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-    FOREIGN KEY (clinica_id) REFERENCES CLINICA(id_clinica) 
+    FOREIGN KEY (clinica_id) REFERENCES CLINICA(id_clinica)
 );
 
 
@@ -123,4 +124,4 @@ CREATE TABLE telefone (
     CONSTRAINT FK_user_id FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
  
-  --  drop database agenda;
+  -- drop database agenda;
