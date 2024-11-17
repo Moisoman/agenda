@@ -26,7 +26,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch clinics from database
+// Fetch clinics from the database
 $stmt = $conn->prepare("SELECT id_clinica, nm_clinica FROM clinica");
 $stmt->execute();
 $stmt->bind_result($clinicaId, $clinicaNome);
@@ -38,11 +38,12 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 // Fetch the user's agendamentos
-$stmt = $conn->prepare("SELECT ag.id, ag.data_hora, c.nm_clinica, u.nome AS paciente_nome 
+$stmt = $conn->prepare("SELECT ag.id, ag.data_hora, c.nm_clinica, u.nome AS paciente_nome, ag.ativo 
                         FROM agendamentos ag 
                         JOIN clinica c ON ag.clinica_id = c.id_clinica 
                         JOIN usuarios u ON ag.usuario_id = u.id 
-                        WHERE ag.usuario_id = ? ORDER BY ag.data_hora DESC");
+                        WHERE ag.usuario_id = ? 
+                        ORDER BY ag.data_hora DESC");
 $stmt->bind_param("i", $userId); // Bind user ID to the query
 $stmt->execute();
 $result = $stmt->get_result(); // Get the result of the query
@@ -64,7 +65,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar_agendamento
 
     $stmt->close();
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancelar_agendamento'])) {
+    $agendamentoId = $_POST['agendamento_id']; // Get the appointment ID to cancel
+
+    // Prepare the SQL query to delete the agendamento
+    $stmt = $conn->prepare("DELETE FROM agendamentos WHERE id = ? AND usuario_id = ?");
+    $stmt->bind_param("ii", $agendamentoId, $userId); // Bind the agendamento ID and user ID
+    if ($stmt->execute()) {
+        echo "<script>alert('Agendamento cancelado com sucesso!');</script>";
+    } else {
+        echo "<script>alert('Erro ao cancelar o agendamento: " . $stmt->error . "');</script>";
+    }
+    $stmt->close();
+}
+
 $conn->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -248,6 +265,8 @@ $conn->close();
                             <th>Data e Hora</th>
                             <th>Clínica</th>
                             <th>Paciente</th>
+                            <th>SITUAÇÃO</th> <!-- New column -->
+                            <th>Ação</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -257,6 +276,16 @@ $conn->close();
                                 <td><?php echo date('d/m/Y H:i', strtotime($row['data_hora'])); ?></td>
                                 <td><?php echo htmlspecialchars($row['nm_clinica']); ?></td>
                                 <td><?php echo htmlspecialchars($row['paciente_nome']); ?></td>
+                                <td>
+                                    <?php echo $row['ativo'] == 1 ? 'CONFIRMADA' : 'PENDENTE'; ?>
+                                </td>
+                                <td>
+                                    <!-- Cancel Button Form -->
+                                    <form method="POST" action="">
+                                        <input type="hidden" name="agendamento_id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit" name="cancelar_agendamento" onclick="return confirm('Você tem certeza que deseja cancelar este agendamento?');">Cancelar</button>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </tbody>
@@ -265,11 +294,7 @@ $conn->close();
                 <p>Você não tem nenhum agendamento.</p>
             <?php endif; ?>
         </div>
-    </div>
 
-    <!-- This will be the calendar that will show when Agendar button is clicked -->
-    <div class="calendario" id="calendario" style="display: none;">
-        <input type="text" id="datepicker">
     </div>
 </div>
 
@@ -291,4 +316,3 @@ $conn->close();
 
 </body>
 </html>
-
