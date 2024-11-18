@@ -10,6 +10,38 @@ if (!isset($_SESSION['usuarioLogado'])) {
 
 // Get the logged-in user's data from the session
 $usuarioLogado = $_SESSION['usuarioLogado'];
+
+// Database connection (modify as per your DB credentials)
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "agenda"; // Corrected database name
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Query to get the phone number from the telefone table
+$user_id = $usuarioLogado['id']; // Assuming 'id' is the user's unique identifier in 'usuarios' table
+$sql = "SELECT numero FROM telefone WHERE user_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id); // Bind the user ID as an integer
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Fetch the phone number
+$phone = "";
+if ($row = $result->fetch_assoc()) {
+    $phone = $row['numero'];
+}
+
+// Close the database connection
+$stmt->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -127,6 +159,10 @@ $usuarioLogado = $_SESSION['usuarioLogado'];
             <div>
                 <strong>Imagem de Perfil:</strong>
                 <img src="../img/<?= htmlspecialchars($usuarioLogado['imagem']) ?>" alt="" width="100">
+            </div>
+            <div>
+                <strong>Telefone:</strong>
+                <span><?= htmlspecialchars($phone) ?></span>
             </div>
         </div>
     </div>
